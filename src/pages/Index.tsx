@@ -5,6 +5,7 @@ import HeroSection from "@/components/HeroSection";
 import ArticlesSection from "@/components/ArticlesSection";
 import Footer from "@/components/Footer";
 import AdminPanel from "@/components/AdminPanel";
+import AdminLogin from "@/components/AdminLogin";
 import ArticleReader from "@/components/ArticleReader";
 
 interface Article {
@@ -60,6 +61,8 @@ The lessons from African SMEs about flexibility, community engagement, and local
   ]);
   
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isReaderOpen, setIsReaderOpen] = useState(false);
 
@@ -105,9 +108,27 @@ The lessons from African SMEs about flexibility, community engagement, and local
     }
   };
 
+  const handleAdminLogin = () => {
+    if (isAdminAuthenticated) {
+      setIsAdminOpen(true);
+    } else {
+      setIsLoginOpen(true);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    setIsAdminAuthenticated(true);
+    setIsAdminOpen(true);
+  };
+
+  const handleAdminClose = () => {
+    setIsAdminOpen(false);
+    setIsAdminAuthenticated(false);
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Header onAdminLogin={() => setIsAdminOpen(true)} />
+      <Header onAdminLogin={handleAdminLogin} />
       
       <main>
         <HeroSection />
@@ -119,9 +140,15 @@ The lessons from African SMEs about flexibility, community engagement, and local
       
       <Footer />
 
+      <AdminLogin
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
+
       <AdminPanel
         isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
+        onClose={handleAdminClose}
         articles={articles}
         onAddArticle={handleAddArticle}
         onEditArticle={handleEditArticle}
