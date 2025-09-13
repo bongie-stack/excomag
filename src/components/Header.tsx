@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Menu, User, LogIn } from "lucide-react";
+import { Menu, User, LogIn, LogOut } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/excomag-logo.png";
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface HeaderProps {
   onAdminLogin: () => void;
+  currentUser?: SupabaseUser | null;
+  onLogout?: () => void;
 }
 
-const Header = ({ onAdminLogin }: HeaderProps) => {
+const Header = ({ onAdminLogin, currentUser, onLogout }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -39,16 +43,48 @@ const Header = ({ onAdminLogin }: HeaderProps) => {
             </a>
           </nav>
 
-          {/* Admin Login Button */}
+          {/* Authentication Buttons */}
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              onClick={onAdminLogin}
-              className="hidden md:flex items-center space-x-2"
-            >
-              <User className="h-4 w-4" />
-              <span>Admin</span>
-            </Button>
+            {currentUser ? (
+              <div className="hidden md:flex items-center space-x-4">
+                <span className="text-sm text-muted-foreground">
+                  {currentUser.email}
+                </span>
+                <Button 
+                  variant="outline" 
+                  onClick={onAdminLogin}
+                  className="flex items-center space-x-2"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Admin</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={onLogout}
+                  className="flex items-center space-x-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <Link to="/auth">
+                  <Button variant="outline">
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  onClick={onAdminLogin}
+                  className="flex items-center space-x-2"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Admin</span>
+                </Button>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -70,10 +106,35 @@ const Header = ({ onAdminLogin }: HeaderProps) => {
               <a href="#articles" className="text-foreground hover:text-accent">Articles</a>
               <a href="#about" className="text-foreground hover:text-accent">About</a>
               <a href="#contact" className="text-foreground hover:text-accent">Contact</a>
-              <Button onClick={onAdminLogin} variant="outline" className="w-fit">
-                <LogIn className="h-4 w-4 mr-2" />
-                Admin Login
-              </Button>
+              
+              {currentUser ? (
+                <div className="flex flex-col space-y-2">
+                  <span className="text-sm text-muted-foreground">
+                    {currentUser.email}
+                  </span>
+                  <Button onClick={onAdminLogin} variant="outline" className="w-fit">
+                    <User className="h-4 w-4 mr-2" />
+                    Admin Panel
+                  </Button>
+                  <Button onClick={onLogout} variant="outline" className="w-fit">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col space-y-2">
+                  <Link to="/auth">
+                    <Button variant="outline" className="w-fit">
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Login
+                    </Button>
+                  </Link>
+                  <Button onClick={onAdminLogin} variant="outline" className="w-fit">
+                    <User className="h-4 w-4 mr-2" />
+                    Admin Login
+                  </Button>
+                </div>
+              )}
             </div>
           </nav>
         )}

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import type { User, Session } from '@supabase/supabase-js';
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ArticlesSection from "@/components/ArticlesSection";
@@ -60,11 +62,32 @@ The lessons from African SMEs about flexibility, community engagement, and local
     }
   ]);
   
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isReaderOpen, setIsReaderOpen] = useState(false);
+
+  // Set up authentication state management
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleAddArticle = (articleData: Omit<Article, 'id' | 'date'>) => {
     const newArticle: Article = {
@@ -126,9 +149,26 @@ The lessons from African SMEs about flexibility, community engagement, and local
     setIsAdminAuthenticated(false);
   };
 
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setIsAdminAuthenticated(false);
+      toast({
+        title: "Logged Out",
+        description: "You have been logged out successfully."
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Header onAdminLogin={handleAdminLogin} />
+      <Header 
+        onAdminLogin={handleAdminLogin}
+        currentUser={user}
+        onLogout={handleLogout}
+      />
       
       <main>
         <HeroSection />
@@ -144,6 +184,7 @@ The lessons from African SMEs about flexibility, community engagement, and local
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+        currentUser={user}
       />
 
       <AdminPanel
