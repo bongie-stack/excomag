@@ -85,7 +85,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <p className="text-primary-foreground/60 text-sm">
-            © {new Date().getFullYear()} ExcoMag Africa. All rights reserved.
+            © {new Date().getFullYear()} ExcoMag Africa. All rights reserved. Site by Bonginkosi Masundulwani
           </p>
         </div>
       </div>
