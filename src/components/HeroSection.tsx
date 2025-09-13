@@ -7,8 +7,11 @@ const HeroSection = () => {
     <section className="hero-gradient text-primary-foreground py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-black/40"></div>
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImage})` }}
+        className="absolute inset-0 bg-cover bg-center md:bg-center bg-no-repeat"
+        style={{ 
+          backgroundImage: `url(${heroImage})`,
+          backgroundPosition: 'center 20%'
+        }}
       ></div>
       
       <div className="container mx-auto px-4 relative z-10">
