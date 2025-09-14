@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
-import { Plus, Edit, Trash2, LogOut } from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
+import AdminHeader from "@/components/AdminHeader";
 
 interface Article {
   id: string;
@@ -29,6 +29,7 @@ interface AdminPanelProps {
   onAddArticle: (article: Omit<Article, 'id' | 'date'>) => void;
   onEditArticle: (id: string, article: Omit<Article, 'id' | 'date'>) => void;
   onDeleteArticle: (id: string) => void;
+  userEmail?: string;
 }
 
 const AdminPanel = ({ 
@@ -37,7 +38,8 @@ const AdminPanel = ({
   articles, 
   onAddArticle, 
   onEditArticle, 
-  onDeleteArticle 
+  onDeleteArticle,
+  userEmail 
 }: AdminPanelProps) => {
   const [isAddingArticle, setIsAddingArticle] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
@@ -117,27 +119,26 @@ const AdminPanel = ({
     setEditingArticle(article);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl">ExcoMag Africa - Admin Panel</DialogTitle>
-            <div className="flex space-x-2">
-              <Button 
-                onClick={() => setIsAddingArticle(true)}
-                className="bg-accent hover:bg-accent/90"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Article
-              </Button>
-              <Button variant="outline" onClick={onClose}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Close
-              </Button>
-            </div>
+    <div className="min-h-screen bg-background">
+      <AdminHeader onLogout={onClose} userEmail={userEmail} />
+      
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Content Management</h1>
+            <p className="text-muted-foreground">Manage your magazine articles and content</p>
           </div>
-        </DialogHeader>
+          <Button 
+            onClick={() => setIsAddingArticle(true)}
+            className="bg-accent hover:bg-accent/90"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Article
+          </Button>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Article Form */}
@@ -295,8 +296,8 @@ const AdminPanel = ({
             </CardContent>
           </Card>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 
