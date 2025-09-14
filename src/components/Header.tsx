@@ -36,27 +36,15 @@ const Header = () => {
             </a>
           </nav>
 
-          {/* Authentication Buttons */}
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-4">
-              <Link to="/auth">
-                <Button variant="outline">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Login
-                </Button>
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
         </div>
 
         {/* Mobile Navigation */}
@@ -67,15 +55,6 @@ const Header = () => {
               <a href="#articles" className="text-foreground hover:text-accent">Articles</a>
               <a href="#about" className="text-foreground hover:text-accent">About</a>
               <a href="#contact" className="text-foreground hover:text-accent">Contact</a>
-              
-              <div className="flex flex-col space-y-2">
-                <Link to="/auth">
-                  <Button variant="outline" className="w-fit">
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Login
-                  </Button>
-                </Link>
-              </div>
             </div>
           </nav>
         )}
