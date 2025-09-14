@@ -4,9 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/excomag-logo.png";
 
-interface HeaderProps {}
-
-const Header = ({}: HeaderProps) => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
