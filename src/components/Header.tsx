@@ -22,16 +22,16 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-foreground hover:text-accent transition-colors">
+            <Link to="/" className="text-foreground hover:text-accent transition-colors">
               Home
-            </a>
-            <a href="#articles" className="text-foreground hover:text-accent transition-colors">
+            </Link>
+            <a href="/#articles" className="text-foreground hover:text-accent transition-colors">
               Articles
             </a>
-            <a href="#about" className="text-foreground hover:text-accent transition-colors">
+            <Link to="/about" className="text-foreground hover:text-accent transition-colors">
               About
-            </a>
-            <a href="#contact" className="text-foreground hover:text-accent transition-colors">
+            </Link>
+            <a href="/#contact" className="text-foreground hover:text-accent transition-colors">
               Contact
             </a>
           </nav>
@@ -51,10 +51,10 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 border-t pt-4">
             <div className="flex flex-col space-y-4">
-              <a href="#home" className="text-foreground hover:text-accent">Home</a>
-              <a href="#articles" className="text-foreground hover:text-accent">Articles</a>
-              <a href="#about" className="text-foreground hover:text-accent">About</a>
-              <a href="#contact" className="text-foreground hover:text-accent">Contact</a>
+              <Link to="/" className="text-foreground hover:text-accent">Home</Link>
+              <a href="/#articles" className="text-foreground hover:text-accent">Articles</a>
+              <Link to="/about" className="text-foreground hover:text-accent">About</Link>
+              <a href="/#contact" className="text-foreground hover:text-accent">Contact</a>
             </div>
           </nav>
         )}
