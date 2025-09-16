@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
 import logo from "@/assets/excomag-logo.png";
 
 const Footer = () => {
@@ -18,14 +18,41 @@ const Footer = () => {
               innovators, and investors across the continent.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-primary-foreground/60 hover:text-accent transition-colors">
-                LinkedIn
+              <a 
+                href="https://zw.linkedin.com/company/exhibitors-corner" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
+              >
+                <Linkedin className="h-4 w-4" />
+                <span>LinkedIn</span>
               </a>
-              <a href="#" className="text-primary-foreground/60 hover:text-accent transition-colors">
-                Twitter
+              <a 
+                href="https://x.com/excomag01" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
+              >
+                <Twitter className="h-4 w-4" />
+                <span>Twitter</span>
               </a>
-              <a href="#" className="text-primary-foreground/60 hover:text-accent transition-colors">
-                Facebook
+              <a 
+                href="https://www.facebook.com/exhibitorscorner/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
+              >
+                <Facebook className="h-4 w-4" />
+                <span>Facebook</span>
+              </a>
+              <a 
+                href="https://www.instagram.com/excomag/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
+              >
+                <Instagram className="h-4 w-4" />
+                <span>Instagram</span>
               </a>
             </div>
           </div>
