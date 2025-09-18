@@ -103,7 +103,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
-                  Johannesburg, South Africa
+                  Bulawayo, Zimbabwe
                 </span>
               </div>
             </div>
