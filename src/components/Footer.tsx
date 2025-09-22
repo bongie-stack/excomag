@@ -1,5 +1,6 @@
-import { Mail, MapPin, Phone, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
-import logo from "@/assets/excomag-logo.png";
+import { Mail, MapPin, Phone, Facebook, Linkedin, Twitter, Instagram } from "lucide-react"
+import { Link } from "react-router-dom"
+import logo from "@/assets/excomag-logo.png"
 
 const Footer = () => {
   return (
@@ -8,46 +9,46 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="md:col-span-2">
-            <img 
-              src={logo} 
-              alt="ExcoMag Africa" 
+            <img
+              src={logo || "/placeholder.svg"}
+              alt="ExcoMag Africa"
               className="h-16 w-auto mb-4 brightness-0 invert"
             />
             <p className="text-primary-foreground/80 mb-4 max-w-md">
-              Africa's premier virtual incubation hub, connecting entrepreneurs, 
-              innovators, and investors across the continent.
+              Africa's premier virtual incubation hub, connecting entrepreneurs, innovators, and investors across the
+              continent.
             </p>
             <div className="flex space-x-4">
-              <a 
-                href="https://zw.linkedin.com/company/exhibitors-corner" 
-                target="_blank" 
+              <a
+                href="https://zw.linkedin.com/company/exhibitors-corner"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
               >
                 <Linkedin className="h-4 w-4" />
                 <span>LinkedIn</span>
               </a>
-              <a 
-                href="https://x.com/excomag01" 
-                target="_blank" 
+              <a
+                href="https://x.com/excomag01"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
               >
                 <Twitter className="h-4 w-4" />
                 <span>Twitter</span>
               </a>
-              <a 
-                href="https://www.facebook.com/exhibitorscorner/" 
-                target="_blank" 
+              <a
+                href="https://www.facebook.com/exhibitorscorner/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
               >
                 <Facebook className="h-4 w-4" />
                 <span>Facebook</span>
               </a>
-              <a 
-                href="https://www.instagram.com/excomag/" 
-                target="_blank" 
+              <a
+                href="https://www.instagram.com/excomag/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-primary-foreground/60 hover:text-accent transition-colors"
               >
@@ -72,9 +73,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <Link to="/about" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#contact" className="text-primary-foreground/80 hover:text-accent transition-colors">
@@ -90,21 +91,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-accent" />
-                <span className="text-primary-foreground/80 text-sm">
-                  info@excomag.africa
-                </span>
+                <span className="text-primary-foreground/80 text-sm">info@excomag.africa</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-accent" />
-                <span className="text-primary-foreground/80 text-sm">
-                  +27 (0) 123 456 789
-                </span>
+                <span className="text-primary-foreground/80 text-sm">+27 (0) 123 456 789</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-accent" />
-                <span className="text-primary-foreground/80 text-sm">
-                  Bulawayo, Zimbabwe
-                </span>
+                <span className="text-primary-foreground/80 text-sm">Bulawayo, Zimbabwe</span>
               </div>
             </div>
           </div>
@@ -117,7 +112,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
