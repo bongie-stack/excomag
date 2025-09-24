@@ -1,4 +1,5 @@
 import { Mail, MapPin, Phone, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/excomag-logo.png";
 
 const Footer = () => {
@@ -72,9 +73,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <Link to="/about" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#contact" className="text-primary-foreground/80 hover:text-accent transition-colors">
