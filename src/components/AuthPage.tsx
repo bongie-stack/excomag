@@ -36,9 +36,11 @@ const AuthPage = () => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Redirect authenticated users to home
+        // Check role and redirect authenticated users
         if (session?.user) {
-          navigate('/');
+          setTimeout(() => {
+            checkRoleAndRedirect(session.user.id);
+          }, 0);
         }
       }
     );
@@ -49,12 +51,31 @@ const AuthPage = () => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        navigate('/');
+        checkRoleAndRedirect(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const checkRoleAndRedirect = async (userId: string) => {
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', userId)
+        .single();
+
+      if (profile?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Error checking role:', error);
+      navigate('/');
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
