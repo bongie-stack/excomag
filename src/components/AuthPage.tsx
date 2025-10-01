@@ -16,6 +16,7 @@ const AuthPage = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
   
   const [loginData, setLoginData] = useState({
     email: "",
@@ -136,9 +137,23 @@ const AuthPage = () => {
         variant: "destructive"
       });
     } else {
+      // Sign out immediately to prevent auto-login
+      await supabase.auth.signOut();
+      
       toast({
-        title: "Signup Successful",
-        description: "Please check your email to confirm your account."
+        title: "Successfully Signed Up!",
+        description: "Please sign in with your new account."
+      });
+      
+      // Switch to login tab
+      setActiveTab("login");
+      
+      // Clear signup form
+      setSignupData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        displayName: ""
       });
     }
 
@@ -158,7 +173,7 @@ const AuthPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
