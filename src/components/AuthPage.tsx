@@ -94,7 +94,9 @@ const AuthPage = () => {
     }
 
     setIsLoading(true);
-const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/admin`
+    
+    const redirectUrl = `${window.location.origin}/admin`;
+    
     const { error } = await supabase.auth.signUp({
       email: signupData.email,
       password: signupData.password,
