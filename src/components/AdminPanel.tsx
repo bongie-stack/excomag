@@ -7,8 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, Upload } from "lucide-react";
 import AdminHeader from "@/components/AdminHeader";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Article {
   id: string;
@@ -43,6 +44,8 @@ const AdminPanel = ({
 }: AdminPanelProps) => {
   const [isAddingArticle, setIsAddingArticle] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -73,11 +76,59 @@ const AdminPanel = ({
       imageUrl: "",
       readTime: ""
     });
+    setSelectedFile(null);
     setIsAddingArticle(false);
     setEditingArticle(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Error",
+          description: "Please select an image file",
+          variant: "destructive"
+        });
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!selectedFile) return formData.imageUrl;
+
+    setIsUploading(true);
+    try {
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('article-images')
+        .upload(filePath, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('article-images')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      toast({
+        title: "Upload Error",
+        description: "Failed to upload image. Please try again.",
+        variant: "destructive"
+      });
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.title || !formData.content || !formData.author || !formData.category) {
@@ -89,21 +140,28 @@ const AdminPanel = ({
       return;
     }
 
-    if (editingArticle) {
-      onEditArticle(editingArticle.id, formData);
-      toast({
-        title: "Success",
-        description: "Article updated successfully"
-      });
-    } else {
-      onAddArticle(formData);
-      toast({
-        title: "Success", 
-        description: "Article published successfully"
-      });
+    try {
+      const imageUrl = await uploadImage();
+      const articleData = { ...formData, imageUrl };
+
+      if (editingArticle) {
+        onEditArticle(editingArticle.id, articleData);
+        toast({
+          title: "Success",
+          description: "Article updated successfully"
+        });
+      } else {
+        onAddArticle(articleData);
+        toast({
+          title: "Success", 
+          description: "Article published successfully"
+        });
+      }
+      
+      resetForm();
+    } catch (error) {
+      // Error already handled in uploadImage
     }
-    
-    resetForm();
   };
 
   const startEdit = (article: Article) => {
@@ -203,13 +261,29 @@ const AdminPanel = ({
                   </div>
 
                   <div>
-                    <Label htmlFor="imageUrl">Image URL</Label>
-                    <Input
-                      id="imageUrl"
-                      value={formData.imageUrl}
-                      onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-                      placeholder="https://example.com/image.jpg"
-                    />
+                    <Label htmlFor="image">Article Image</Label>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Input
+                          id="image"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileSelect}
+                          className="flex-1"
+                        />
+                        {selectedFile && (
+                          <Badge variant="outline" className="whitespace-nowrap">
+                            <Upload className="h-3 w-3 mr-1" />
+                            {selectedFile.name}
+                          </Badge>
+                        )}
+                      </div>
+                      {formData.imageUrl && (
+                        <p className="text-xs text-muted-foreground">
+                          Current: {formData.imageUrl}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <div>
@@ -236,8 +310,12 @@ const AdminPanel = ({
                   </div>
 
                   <div className="flex space-x-3">
-                    <Button type="submit" className="bg-accent hover:bg-accent/90">
-                      {editingArticle ? "Update Article" : "Publish Article"}
+                    <Button 
+                      type="submit" 
+                      className="bg-accent hover:bg-accent/90"
+                      disabled={isUploading}
+                    >
+                      {isUploading ? "Uploading..." : editingArticle ? "Update Article" : "Publish Article"}
                     </Button>
                     <Button type="button" variant="outline" onClick={resetForm}>
                       Cancel
