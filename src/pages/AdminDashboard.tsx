@@ -16,6 +16,7 @@ interface Article {
   category: string;
   imageUrl?: string;
   readTime: string;
+  mediaUrls?: string[];
 }
 
 const AdminDashboard = () => {
@@ -57,6 +58,11 @@ The lessons from African SMEs about flexibility, community engagement, and local
       readTime: "6 min read"
     }
   ]);
+  
+  // Persist articles to localStorage for site & article page
+  useEffect(() => {
+    localStorage.setItem('articles', JSON.stringify(articles));
+  }, [articles]);
   
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
