@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ArticlesSection from "@/components/ArticlesSection";
 import Footer from "@/components/Footer";
-import ArticleReader from "@/components/ArticleReader";
 
 interface Article {
   id: string;
@@ -15,9 +15,11 @@ interface Article {
   category: string;
   imageUrl?: string;
   readTime: string;
+  mediaUrls?: string[];
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [articles] = useState<Article[]>([
     {
       id: "1",
@@ -56,16 +58,14 @@ The lessons from African SMEs about flexibility, community engagement, and local
       readTime: "6 min read"
     }
   ]);
-  
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [isReaderOpen, setIsReaderOpen] = useState(false);
+
+  // Store articles in localStorage for the Article page to access
+  useEffect(() => {
+    localStorage.setItem('articles', JSON.stringify(articles));
+  }, [articles]);
 
   const handleReadArticle = (id: string) => {
-    const article = articles.find(a => a.id === id);
-    if (article) {
-      setSelectedArticle(article);
-      setIsReaderOpen(true);
-    }
+    navigate(`/article/${id}`);
   };
 
   return (
@@ -81,12 +81,6 @@ The lessons from African SMEs about flexibility, community engagement, and local
       </main>
       
       <Footer />
-
-      <ArticleReader
-        article={selectedArticle}
-        isOpen={isReaderOpen}
-        onClose={() => setIsReaderOpen(false)}
-      />
     </div>
   );
 };

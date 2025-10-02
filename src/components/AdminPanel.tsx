@@ -21,6 +21,7 @@ interface Article {
   category: string;
   imageUrl?: string;
   readTime: string;
+  mediaUrls?: string[];
 }
 
 interface AdminPanelProps {
@@ -45,6 +46,7 @@ const AdminPanel = ({
   const [isAddingArticle, setIsAddingArticle] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [additionalMedia, setAdditionalMedia] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -53,7 +55,8 @@ const AdminPanel = ({
     author: "",
     category: "",
     imageUrl: "",
-    readTime: ""
+    readTime: "",
+    mediaUrls: [] as string[]
   });
 
   const categories = [
@@ -74,9 +77,11 @@ const AdminPanel = ({
       author: "",
       category: "",
       imageUrl: "",
-      readTime: ""
+      readTime: "",
+      mediaUrls: []
     });
     setSelectedFile(null);
+    setAdditionalMedia([]);
     setIsAddingArticle(false);
     setEditingArticle(null);
   };
@@ -94,6 +99,21 @@ const AdminPanel = ({
       }
       setSelectedFile(file);
     }
+  };
+
+  const handleAdditionalMediaSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (imageFiles.length !== files.length) {
+      toast({
+        title: "Warning",
+        description: "Only image files are supported",
+        variant: "destructive"
+      });
+    }
+    
+    setAdditionalMedia(prev => [...prev, ...imageFiles]);
   };
 
   const uploadImage = async () => {
@@ -128,6 +148,44 @@ const AdminPanel = ({
     }
   };
 
+  const uploadAdditionalMedia = async () => {
+    if (additionalMedia.length === 0) return formData.mediaUrls;
+
+    setIsUploading(true);
+    try {
+      const uploadedUrls: string[] = [];
+
+      for (const file of additionalMedia) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('article-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('article-images')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(publicUrl);
+      }
+
+      return [...formData.mediaUrls, ...uploadedUrls];
+    } catch (error) {
+      toast({
+        title: "Upload Error",
+        description: "Failed to upload additional media. Please try again.",
+        variant: "destructive"
+      });
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -142,7 +200,8 @@ const AdminPanel = ({
 
     try {
       const imageUrl = await uploadImage();
-      const articleData = { ...formData, imageUrl };
+      const mediaUrls = await uploadAdditionalMedia();
+      const articleData = { ...formData, imageUrl, mediaUrls };
 
       if (editingArticle) {
         onEditArticle(editingArticle.id, articleData);
@@ -160,7 +219,7 @@ const AdminPanel = ({
       
       resetForm();
     } catch (error) {
-      // Error already handled in uploadImage
+      // Error already handled in upload functions
     }
   };
 
@@ -172,7 +231,8 @@ const AdminPanel = ({
       author: article.author,
       category: article.category,
       imageUrl: article.imageUrl || "",
-      readTime: article.readTime
+      readTime: article.readTime,
+      mediaUrls: article.mediaUrls || []
     });
     setEditingArticle(article);
   };
@@ -303,10 +363,41 @@ const AdminPanel = ({
                       id="content"
                       value={formData.content}
                       onChange={(e) => setFormData({...formData, content: e.target.value})}
-                      placeholder="Full article content"
+                      placeholder="Full article content. Use [IMAGE:0], [IMAGE:1], etc. to insert additional media at specific positions."
                       rows={8}
                       required
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Tip: Use [IMAGE:0] to insert the first additional image, [IMAGE:1] for the second, etc.
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="additionalMedia">Additional Media (Optional)</Label>
+                    <div className="space-y-2">
+                      <Input
+                        id="additionalMedia"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleAdditionalMediaSelect}
+                      />
+                      {additionalMedia.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {additionalMedia.map((file, idx) => (
+                            <Badge key={idx} variant="outline">
+                              <Upload className="h-3 w-3 mr-1" />
+                              {file.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      {formData.mediaUrls.length > 0 && (
+                        <div className="text-xs text-muted-foreground">
+                          Currently: {formData.mediaUrls.length} uploaded media file(s)
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex space-x-3">
