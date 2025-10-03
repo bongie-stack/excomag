@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, Target, Users, Globe, Lightbulb, MessageSquare } from "lucide-react";
+import africanDiversity from "@/assets/african-diversity.jpg";
+import africanInnovation from "@/assets/african-innovation.jpg";
+import africanHeritage from "@/assets/african-heritage-business.jpg";
 
 const About = () => {
   const categories = [
@@ -53,6 +56,15 @@ const About = () => {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             A digital-first business media platform spotlighting Africa's most promising emerging businesses
           </p>
+          
+          <div className="mt-12 rounded-lg overflow-hidden shadow-2xl">
+            <img 
+              src={africanDiversity} 
+              alt="African cultural diversity and entrepreneurship" 
+              className="w-full h-auto object-cover max-w-full"
+              loading="lazy"
+            />
+          </div>
         </div>
 
         {/* About Section */}
@@ -75,17 +87,37 @@ const About = () => {
               </p>
             </div>
             
-            <Card className="card-shadow">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-primary mb-6">Our Mission</h3>
-                <p className="text-lg text-foreground mb-4 leading-relaxed">
-                  To inspire and equip Africa's emerging business leaders through storytelling, smart tools, and community.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  At ExcoMag Africa, we cover the stories, tools, and shifts shaping the future of African enterprise. Whether you're building a business from your bedroom or scaling across borders, our content is built for you — the emerging founder, the side hustler.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="card-shadow">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold text-primary mb-6">Our Mission</h3>
+                  <p className="text-lg text-foreground mb-4 leading-relaxed">
+                    To inspire and equip Africa's emerging business leaders through storytelling, smart tools, and community.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    At ExcoMag Africa, we cover the stories, tools, and shifts shaping the future of African enterprise. Whether you're building a business from your bedroom or scaling across borders, our content is built for you — the emerging founder, the side hustler.
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <div className="rounded-lg overflow-hidden shadow-lg">
+                <img 
+                  src={africanHeritage} 
+                  alt="African heritage and modern business innovation" 
+                  className="w-full h-auto object-cover max-w-full"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="mb-16 rounded-lg overflow-hidden shadow-2xl">
+            <img 
+              src={africanInnovation} 
+              alt="African innovation and entrepreneurship ecosystem" 
+              className="w-full h-auto object-cover max-w-full"
+              loading="lazy"
+            />
           </div>
         </div>
 
