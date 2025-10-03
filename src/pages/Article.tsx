@@ -69,7 +69,8 @@ const Article = () => {
               <img
                 src={article.mediaUrls[imageIndex]}
                 alt={`Article media ${imageIndex + 1}`}
-                className="w-full rounded-lg shadow-lg"
+                className="w-full h-auto object-cover rounded-lg shadow-lg max-w-full"
+                loading="lazy"
               />
             </div>
           );
@@ -136,7 +137,8 @@ const Article = () => {
               <img
                 src={article.imageUrl}
                 alt={article.title}
-                className="w-full h-auto"
+                className="w-full h-auto object-cover max-w-full"
+                loading="lazy"
               />
             </div>
           )}
