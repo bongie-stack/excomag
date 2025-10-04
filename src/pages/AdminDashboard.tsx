@@ -22,10 +22,42 @@ interface Article {
 const AdminDashboard = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   
-  // Persist articles to localStorage for site & article page
+  // Fetch articles from Supabase
   useEffect(() => {
-    localStorage.setItem('articles', JSON.stringify(articles));
-  }, [articles]);
+    fetchArticles();
+  }, []);
+
+  const fetchArticles = async () => {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching articles:', error);
+      return;
+    }
+    
+    if (data) {
+      const formattedArticles: Article[] = data.map(article => ({
+        id: article.id,
+        title: article.title,
+        excerpt: article.excerpt || '',
+        content: article.content || '',
+        author: article.author || '',
+        date: new Date(article.created_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        category: article.category || '',
+        imageUrl: article.image_url || undefined,
+        readTime: article.read_time || '',
+        mediaUrls: article.media_urls || undefined
+      }));
+      setArticles(formattedArticles);
+    }
+  };
   
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -102,38 +134,95 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleAddArticle = (articleData: Omit<Article, 'id' | 'date'>) => {
-    const newArticle: Article = {
-      ...articleData,
-      id: Date.now().toString(),
-      date: new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+  const handleAddArticle = async (articleData: Omit<Article, 'id' | 'date'>) => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('articles')
+      .insert({
+        user_id: user.id,
+        title: articleData.title,
+        excerpt: articleData.excerpt,
+        content: articleData.content,
+        author: articleData.author,
+        category: articleData.category,
+        image_url: articleData.imageUrl,
+        media_urls: articleData.mediaUrls,
+        read_time: articleData.readTime
       })
-    };
-    
-    setArticles(prev => [newArticle, ...prev]);
+      .select()
+      .single();
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to publish article. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     toast({
       title: "Success",
       description: "Article published successfully!"
     });
+    
+    fetchArticles();
   };
 
-  const handleEditArticle = (id: string, articleData: Omit<Article, 'id' | 'date'>) => {
-    setArticles(prev => prev.map(article => 
-      article.id === id 
-        ? { ...article, ...articleData }
-        : article
-    ));
+  const handleEditArticle = async (id: string, articleData: Omit<Article, 'id' | 'date'>) => {
+    const { error } = await supabase
+      .from('articles')
+      .update({
+        title: articleData.title,
+        excerpt: articleData.excerpt,
+        content: articleData.content,
+        author: articleData.author,
+        category: articleData.category,
+        image_url: articleData.imageUrl,
+        media_urls: articleData.mediaUrls,
+        read_time: articleData.readTime
+      })
+      .eq('id', id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update article. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "Article updated successfully!"
+    });
+    
+    fetchArticles();
   };
 
-  const handleDeleteArticle = (id: string) => {
-    setArticles(prev => prev.filter(article => article.id !== id));
+  const handleDeleteArticle = async (id: string) => {
+    const { error } = await supabase
+      .from('articles')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete article. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     toast({
       title: "Article Deleted",
       description: "The article has been removed successfully."
     });
+    
+    fetchArticles();
   };
 
   const handleLoginSuccess = () => {

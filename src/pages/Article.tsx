@@ -1,9 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Calendar, User, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Article {
   id: string;
@@ -21,12 +23,61 @@ interface Article {
 const Article = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // This will be replaced with actual data fetching from Supabase
-  // For now, using localStorage to share data from Index page
-  const articlesData = localStorage.getItem('articles');
-  const articles: Article[] = articlesData ? JSON.parse(articlesData) : [];
-  const article = articles.find((a) => a.id === id);
+  useEffect(() => {
+    const fetchArticle = async () => {
+      if (!id) return;
+
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error || !data) {
+        setLoading(false);
+        return;
+      }
+
+      const formattedArticle: Article = {
+        id: data.id,
+        title: data.title,
+        excerpt: data.excerpt || '',
+        content: data.content || '',
+        author: data.author || '',
+        date: new Date(data.created_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        category: data.category || '',
+        imageUrl: data.image_url || undefined,
+        readTime: data.read_time || '',
+        mediaUrls: data.media_urls || undefined
+      };
+
+      setArticle(formattedArticle);
+      setLoading(false);
+    };
+
+    fetchArticle();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-4 py-16">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold mb-4">Loading...</h1>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!article) {
     return (
