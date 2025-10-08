@@ -59,7 +59,9 @@ const AuthPage = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const checkRoleAndRedirect = async (userId: string) => {
+  const checkRoleAndRedirect = async (userId: string, skipRedirect = false) => {
+    if (skipRedirect) return;
+    
     try {
       const { data: profile } = await supabase
         .from('profiles')
@@ -117,9 +119,9 @@ const AuthPage = () => {
 
     setIsLoading(true);
     
-    const redirectUrl = `${window.location.origin}/admin`;
+    const redirectUrl = `${window.location.origin}/auth`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: signupData.email,
       password: signupData.password,
       options: {
@@ -137,16 +139,25 @@ const AuthPage = () => {
         variant: "destructive"
       });
     } else {
-      // Sign out immediately to prevent auto-login
-      await supabase.auth.signOut();
+      // Sign out immediately to prevent auto-redirect
+      if (data.session) {
+        await supabase.auth.signOut();
+      }
       
       toast({
         title: "Successfully Signed Up!",
-        description: "Please sign in with your new account."
+        description: "Your admin account has been created. Please sign in to continue.",
+        duration: 5000
       });
       
       // Switch to login tab
       setActiveTab("login");
+      
+      // Pre-fill email in login form
+      setLoginData({
+        email: signupData.email,
+        password: ""
+      });
       
       // Clear signup form
       setSignupData({

@@ -59,6 +59,30 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_settings: {
+        Row: {
+          email_template: string
+          id: string
+          subject_template: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          email_template?: string
+          id?: string
+          subject_template?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          email_template?: string
+          id?: string
+          subject_template?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -86,6 +110,27 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          email: string
+          id: string
+          is_active: boolean
+          subscribed_at: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          is_active?: boolean
+          subscribed_at?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          is_active?: boolean
+          subscribed_at?: string
         }
         Relationships: []
       }

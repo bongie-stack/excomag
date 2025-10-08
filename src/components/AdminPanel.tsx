@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { Plus, Edit, Trash2, Upload } from "lucide-react";
 import AdminHeader from "@/components/AdminHeader";
+import NewsletterManager from "@/components/NewsletterManager";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Article {
@@ -244,21 +246,29 @@ const AdminPanel = ({
       <AdminHeader onLogout={onClose} userEmail={userEmail} />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Content Management</h1>
-            <p className="text-muted-foreground">Manage your magazine articles and content</p>
-          </div>
-          <Button 
-            onClick={() => setIsAddingArticle(true)}
-            className="bg-accent hover:bg-accent/90"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Article
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
+          <p className="text-muted-foreground">Manage your magazine articles and newsletter</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Tabs defaultValue="articles" className="w-full">
+          <TabsList>
+            <TabsTrigger value="articles">Articles</TabsTrigger>
+            <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="articles" className="space-y-6">
+            <div className="flex items-center justify-end">
+              <Button 
+                onClick={() => setIsAddingArticle(true)}
+                className="bg-accent hover:bg-accent/90"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Article
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Article Form */}
           {(isAddingArticle || editingArticle) && (
             <Card>
@@ -464,7 +474,13 @@ const AdminPanel = ({
               </div>
             </CardContent>
           </Card>
-        </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="newsletter">
+            <NewsletterManager />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
