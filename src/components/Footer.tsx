@@ -20,11 +20,6 @@ const Footer = () => {
               alt="ExcoMag Africa" 
               className="h-16 w-auto mb-4 brightness-0 invert"
             />
-            <img 
-              src={logo} 
-              alt="ExcoMag Africa Icon" 
-              className="h-20 w-auto mb-4"
-            />
             <p className="text-primary-foreground/80 mb-4 max-w-md">
               Africa's premier virtual incubation hub, connecting entrepreneurs, 
               innovators, and investors across the continent.
