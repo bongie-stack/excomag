@@ -31,9 +31,9 @@ const Header = () => {
             <Link to="/about" className="text-foreground hover:text-accent transition-colors">
               About
             </Link>
-            <a href="/#contact" className="text-foreground hover:text-accent transition-colors">
+            <Link to="/contact" className="text-foreground hover:text-accent transition-colors">
               Contact
-            </a>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -54,7 +54,7 @@ const Header = () => {
               <Link to="/" className="text-foreground hover:text-accent">Home</Link>
               <a href="/#articles" className="text-foreground hover:text-accent">Articles</a>
               <Link to="/about" className="text-foreground hover:text-accent">About</Link>
-              <a href="/#contact" className="text-foreground hover:text-accent">Contact</a>
+              <Link to="/contact" className="text-foreground hover:text-accent">Contact</Link>
             </div>
           </nav>
         )}
