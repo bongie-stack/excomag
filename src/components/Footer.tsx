@@ -69,22 +69,44 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#home" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <Link 
+                  to="/" 
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="text-primary-foreground/80 hover:text-accent transition-colors"
+                >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#articles" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <Link 
+                  to="/#articles" 
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    setTimeout(() => {
+                      const articlesSection = document.getElementById('articles');
+                      articlesSection?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="text-primary-foreground/80 hover:text-accent transition-colors"
+                >
                   Articles
-                </a>
+                </Link>
               </li>
               <li>
-                <Link to="/about" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <Link 
+                  to="/about" 
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="text-primary-foreground/80 hover:text-accent transition-colors"
+                >
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <Link 
+                  to="/contact" 
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="text-primary-foreground/80 hover:text-accent transition-colors"
+                >
                   Contact
                 </Link>
               </li>
