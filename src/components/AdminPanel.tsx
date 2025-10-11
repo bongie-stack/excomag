@@ -12,6 +12,7 @@ import AdminHeader from "@/components/AdminHeader";
 import NewsletterManager from "@/components/NewsletterManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
+import RichTextEditor from "@/components/RichTextEditor";
 
 interface Article {
   id: string;
@@ -369,45 +370,13 @@ const AdminPanel = ({
 
                   <div>
                     <Label htmlFor="content">Content *</Label>
-                    <Textarea
-                      id="content"
-                      value={formData.content}
-                      onChange={(e) => setFormData({...formData, content: e.target.value})}
-                      placeholder="Full article content. Use [IMAGE:0], [IMAGE:1], etc. to insert additional media at specific positions."
-                      rows={8}
-                      required
+                    <RichTextEditor
+                      content={formData.content}
+                      onChange={(content) => setFormData({...formData, content})}
                     />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Tip: Use [IMAGE:0] to insert the first additional image, [IMAGE:1] for the second, etc.
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Use the toolbar to format text and insert images or YouTube videos directly into your article content.
                     </p>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="additionalMedia">Additional Media (Optional)</Label>
-                    <div className="space-y-2">
-                      <Input
-                        id="additionalMedia"
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={handleAdditionalMediaSelect}
-                      />
-                      {additionalMedia.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {additionalMedia.map((file, idx) => (
-                            <Badge key={idx} variant="outline">
-                              <Upload className="h-3 w-3 mr-1" />
-                              {file.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                      {formData.mediaUrls.length > 0 && (
-                        <div className="text-xs text-muted-foreground">
-                          Currently: {formData.mediaUrls.length} uploaded media file(s)
-                        </div>
-                      )}
-                    </div>
                   </div>
 
                   <div className="flex space-x-3">

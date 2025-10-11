@@ -85,13 +85,10 @@ const ArticleReader = ({ article, isOpen, onClose }: ArticleReaderProps) => {
               </div>
             )}
 
-            <div className="prose prose-lg max-w-none">
-              {article.content.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="mb-4 leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            <div 
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
 
             {/* Article Footer */}
             <div className="mt-8 pt-6 border-t">
