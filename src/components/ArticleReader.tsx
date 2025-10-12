@@ -86,7 +86,7 @@ const ArticleReader = ({ article, isOpen, onClose }: ArticleReaderProps) => {
             )}
 
             <div 
-              className="prose prose-lg max-w-none prose-img:mx-auto prose-img:my-4 prose-video:mx-auto prose-video:my-4"
+              className="prose prose-lg max-w-none dark:prose-invert prose-img:rounded-lg prose-img:mx-auto prose-img:my-4 prose-video:rounded-lg prose-video:mx-auto prose-video:my-4 prose-img:max-w-3xl prose-video:max-w-3xl"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
 
