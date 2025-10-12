@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
+import { Node } from '@tiptap/core';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +23,30 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
 
+// Custom Video extension for uploaded video files
+const VideoNode = Node.create({
+  name: 'video',
+  group: 'block',
+  atom: true,
+  addAttributes() {
+    return {
+      src: {
+        default: null,
+      },
+    };
+  },
+  parseHTML() {
+    return [
+      {
+        tag: 'video',
+      },
+    ];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['video', { ...HTMLAttributes, controls: true, class: 'w-full max-w-3xl h-auto rounded-lg my-4' }, ['source', { src: HTMLAttributes.src }]];
+  },
+});
+
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
@@ -31,6 +56,7 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
   const [imageUrl, setImageUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [isVideoDialogOpen, setIsVideoDialogOpen] = useState(false);
 
@@ -39,16 +65,17 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
       StarterKit,
       Image.configure({
         HTMLAttributes: {
-          class: 'max-w-full h-auto rounded-lg my-4',
+          class: 'w-full max-w-3xl h-auto rounded-lg my-4 mx-auto block',
         },
       }),
       Youtube.configure({
         controls: true,
         nocookie: true,
         HTMLAttributes: {
-          class: 'w-full aspect-video rounded-lg my-4',
+          class: 'w-full max-w-3xl aspect-video rounded-lg my-4 mx-auto',
         },
       }),
+      VideoNode,
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -112,6 +139,52 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
       editor?.chain().focus().setImage({ src: imageUrl }).run();
       setImageUrl('');
       setIsImageDialogOpen(false);
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('video/')) {
+      toast({
+        title: "Error",
+        description: "Please select a video file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadingVideo(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('article-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('article-images')
+        .getPublicUrl(filePath);
+
+      editor?.commands.insertContent(`<video controls class="w-full max-w-3xl h-auto rounded-lg my-4 mx-auto"><source src="${publicUrl}" type="${file.type}"></video>`);
+      setIsVideoDialogOpen(false);
+      toast({
+        title: "Success",
+        description: "Video uploaded and inserted"
+      });
+    } catch (error) {
+      toast({
+        title: "Upload Error",
+        description: "Failed to upload video. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingVideo(false);
     }
   };
 
@@ -241,9 +314,27 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Insert YouTube Video</DialogTitle>
+              <DialogTitle>Insert Video</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
+              <div>
+                <Label htmlFor="video-upload">Upload Video File</Label>
+                <Input
+                  id="video-upload"
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  disabled={uploadingVideo}
+                />
+              </div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or</span>
+                </div>
+              </div>
               <div>
                 <Label htmlFor="video-url">YouTube Video URL</Label>
                 <div className="flex gap-2">
@@ -256,7 +347,7 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
                   <Button type="button" onClick={addVideo}>Add</Button>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Paste a YouTube video URL to embed it in your article
+                  Upload a video file or paste a YouTube URL
                 </p>
               </div>
             </div>
