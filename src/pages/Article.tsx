@@ -94,42 +94,71 @@ const Article = () => {
     );
   }
 
-  // Parse content for embedded images
-  const renderContent = () => {
-    const parts = article.content.split(/\[IMAGE:(\d+)\]/g);
-    const elements: JSX.Element[] = [];
+  // Transform content to render actual media instead of raw URLs/placeholders
+  const buildTransformedHtml = () => {
+    const text = article.content || "";
 
-    for (let i = 0; i < parts.length; i++) {
-      if (i % 2 === 0) {
-        // Text content
-        parts[i].split('\n\n').forEach((paragraph, idx) => {
-          if (paragraph.trim()) {
-            elements.push(
-              <p key={`p-${i}-${idx}`} className="text-lg text-foreground/90 leading-relaxed mb-6">
-                {paragraph}
-              </p>
-            );
-          }
-        });
-      } else {
-        // Image reference
-        const imageIndex = parseInt(parts[i]);
-        if (article.mediaUrls && article.mediaUrls[imageIndex]) {
-          elements.push(
-            <div key={`img-${i}`} className="my-8">
-              <img
-                src={article.mediaUrls[imageIndex]}
-                alt={`Article media ${imageIndex + 1}`}
-                className="w-full h-auto object-cover rounded-lg shadow-lg max-w-full"
-                loading="lazy"
-              />
-            </div>
-          );
-        }
-      }
+    // Heuristic: if content already contains HTML tags, trust it (from RichTextEditor)
+    const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(text.trim());
+    if (looksLikeHtml) {
+      return text;
     }
 
-    return elements;
+    let html = text;
+
+    // Helper to decide if a URL is image or video
+    const isImage = (url: string) => /(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.avif)$/i.test(url);
+    const isVideo = (url: string) => /(\.mp4|\.webm|\.ogg|\.mov|\.m4v)$/i.test(url);
+
+    // 1) Replace [IMAGE:n] and [VIDEO:n] with mediaUrls[n]
+    html = html.replace(/\[IMAGE:(\d+)\]/g, (_, idx: string) => {
+      const i = parseInt(idx, 10);
+      const src = article.mediaUrls?.[i];
+      return src
+        ? `<img src="${src}" alt="Article media ${i + 1}" class="w-full max-w-3xl h-auto rounded-lg my-4 mx-auto block" loading="lazy" />`
+        : "";
+    });
+
+    html = html.replace(/\[VIDEO:(\d+)\]/g, (_, idx: string) => {
+      const i = parseInt(idx, 10);
+      const src = article.mediaUrls?.[i];
+      return src
+        ? `<video controls preload="metadata" class="w-full max-w-3xl rounded-lg my-4 mx-auto block"><source src="${src}" /></video>`
+        : "";
+    });
+
+    // 2) Replace generic [IMAGE: description] / [VIDEO: description] sequentially
+    let nextMediaIndex = 0;
+    html = html.replace(/\[(IMAGE|VIDEO):\s*([^\]]*)\]/gi, (_match, kind: string) => {
+      const src = article.mediaUrls?.[nextMediaIndex++];
+      if (!src) return "";
+      if (kind.toUpperCase() === "IMAGE" || isImage(src)) {
+        return `<img src="${src}" alt="Article media" class="w-full max-w-3xl h-auto rounded-lg my-4 mx-auto block" loading="lazy" />`;
+      }
+      return `<video controls preload="metadata" class="w-full max-w-3xl rounded-lg my-4 mx-auto block"><source src="${src}" /></video>`;
+    });
+
+    // 3) Convert bare URLs into media embeds when possible
+    html = html.replace(/(https?:\/\/[^\s<]+[^\s<\.)])/g, (url: string) => {
+      if (isImage(url)) {
+        return `<img src="${url}" alt="Article image" class="w-full max-w-3xl h-auto rounded-lg my-4 mx-auto block" loading="lazy" />`;
+      }
+      if (isVideo(url)) {
+        return `<video controls preload="metadata" class="w-full max-w-3xl rounded-lg my-4 mx-auto block"><source src="${url}" /></video>`;
+      }
+      // Fallback: turn into a link (but not a raw URL in text)
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline">${url}</a>`;
+    });
+
+    // 4) Wrap text blocks into paragraphs for nicer formatting
+    const paragraphs = html
+      .split(/\n{2,}/)
+      .map(p => p.trim())
+      .filter(Boolean)
+      .map(p => (p.startsWith("<") ? p : `<p>${p.replace(/\n/g, "<br/>")}</p>`))
+      .join("\n\n");
+
+    return paragraphs;
   };
 
   return (
@@ -195,9 +224,10 @@ const Article = () => {
           )}
 
           {/* Article Content */}
-          <div className="prose prose-lg max-w-none">
-            {renderContent()}
-          </div>
+          <div
+            className="prose prose-lg max-w-none dark:prose-invert prose-img:rounded-lg prose-img:mx-auto prose-img:my-4 prose-video:rounded-lg prose-video:mx-auto prose-video:my-4 prose-img:max-w-3xl prose-video:max-w-3xl"
+            dangerouslySetInnerHTML={{ __html: buildTransformedHtml() }}
+          />
 
           {/* Article Footer */}
           <footer className="mt-12 pt-8 border-t border-border">
