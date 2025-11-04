@@ -16,7 +16,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="md:col-span-2">
             <img 
-              src={logo} 
+              src={favicon} 
               alt="ExcoMag Africa" 
               className="h-16 w-auto mb-4 brightness-0 invert"
             />
