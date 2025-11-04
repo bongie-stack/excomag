@@ -18,7 +18,7 @@ const Footer = () => {
             <img 
               src={logo} 
               alt="ExcoMag Africa" 
-              className="h-16 w-auto mb-4 brightness-0 invert"
+              className="h-16 w-auto mb-4"
             />
             <p className="text-primary-foreground/80 mb-4 max-w-md">
               Africa's premier virtual incubation hub, connecting entrepreneurs, 
@@ -118,19 +118,19 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Contact Info</h4>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 text-accent" />
+                <Mail className="h-5 w-5 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
                   info@excomag.africa
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-4 w-4 text-accent" />
+                <Phone className="h-5 w-5 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
                   +263 71 570 05930
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <MapPin className="h-4 w-4 text-accent" />
+                <MapPin className="h-5 w-5 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
                   Office 709, Charter House Cnr Fort St. 
                   & L Takawira Bulawayo, Zimbabwe
