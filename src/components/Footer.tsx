@@ -1,9 +1,15 @@
 import { Mail, MapPin, Phone, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/excomag-logo.png";
+import NewsletterSubscribe from "./NewsletterSubscribe";
 const Footer = () => {
   return <footer className="bg-primary text-primary-foreground py-12">
       <div className="container mx-auto px-4">
+        {/* Newsletter Section */}
+        <div className="mb-12">
+          <NewsletterSubscribe />
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="md:col-span-2">

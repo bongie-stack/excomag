@@ -3,7 +3,6 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/excomag-logo.png";
-import NewsletterSubscribe from "./NewsletterSubscribe";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,11 +58,6 @@ const Header = () => {
             </div>
           </nav>
         )}
-
-        {/* Newsletter Section */}
-        <div className="mt-6 border-t pt-6">
-          <NewsletterSubscribe />
-        </div>
       </div>
     </header>
   );
