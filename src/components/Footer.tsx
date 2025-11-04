@@ -133,7 +133,7 @@ const Footer = () => {
                 <MapPin className="h-4 w-4 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
                   Office 709, Charter House Cnr Fort St. 
-                  & L Takawira Bulawayo, Zimbabwe
+                  <p></>& L Takawira Bulawayo, Zimbabwe<p/>
                 </span>
               </div>
             </div>
