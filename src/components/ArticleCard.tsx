@@ -21,7 +21,10 @@ interface ArticleCardProps {
 
 const ArticleCard = ({ article, onRead }: ArticleCardProps) => {
   return (
-    <Card className="card-shadow hover:shadow-lg transition-all duration-300 group cursor-pointer overflow-hidden">
+    <Card 
+      className="card-shadow hover:shadow-lg transition-all duration-300 group cursor-pointer overflow-hidden"
+      onClick={() => onRead(article.id)}
+    >
       {article.imageUrl && (
         <div className="aspect-video overflow-hidden">
           <img 
