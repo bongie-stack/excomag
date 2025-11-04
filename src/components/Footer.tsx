@@ -132,7 +132,8 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-accent" />
                 <span className="text-primary-foreground/80 text-sm">
-                  Johannesburg, South Africa
+                  Office 709, Charter House Cnr Fort St. 
+                  & L Takawira Bulawayo, Zimbabwe
                 </span>
               </div>
             </div>
@@ -141,7 +142,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <p className="text-primary-foreground/60 text-sm">
-            © {new Date().getFullYear()} ExcoMag Africa. All rights reserved. Site by Bonginkosi Masundulwani
+            © {new Date().getFullYear()} ExcoMag Africa. All rights reserved.
           </p>
         </div>
       </div>
