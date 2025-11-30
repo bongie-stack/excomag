@@ -1,0 +1,6 @@
+# Source - https://stackoverflow.com/a
+# Posted by Petr L.
+# Retrieved 2025-11-30, License - CC BY-SA 4.0
+
+- name: Build with Typescript
+        run: npx tsc
