@@ -143,3 +143,59 @@ Your site will be available at: `https://your-username.github.io/your-repo-name/
    - Commit and redeploy
 
 **Note**: DNS propagation can take up to 48 hours. You can check status at [dnschecker.org](https://dnschecker.org)
+
+## Deploy to Namecheap cPanel (Alternative to GitHub Pages)
+
+If you prefer to host on Namecheap's cPanel instead of GitHub Pages:
+
+1. **Build your project**:
+   ```sh
+   npm run build
+   ```
+
+2. **Update vite.config.ts** - Remove or comment out the base URL:
+   ```typescript
+   export default defineConfig({
+     // base: '/your-repo-name/',  // Comment this out for cPanel
+     // ... rest of config
+   })
+   ```
+
+3. **Access cPanel File Manager**:
+   - Log in to your Namecheap account
+   - Go to Hosting List → Manage → cPanel
+   - Open **File Manager**
+
+4. **Upload your build files**:
+   - Navigate to `public_html` folder (or your domain's root folder)
+   - Delete existing files if doing a fresh deployment
+   - Upload all contents from your local `dist` folder
+   - You can compress `dist` folder to `.zip`, upload, then extract in cPanel
+
+5. **Configure .htaccess for SPA routing**:
+   - Create or edit `.htaccess` file in `public_html` with:
+   ```apache
+   <IfModule mod_rewrite.c>
+     RewriteEngine On
+     RewriteBase /
+     RewriteRule ^index\.html$ - [L]
+     RewriteCond %{REQUEST_FILENAME} !-f
+     RewriteCond %{REQUEST_FILENAME} !-d
+     RewriteCond %{REQUEST_FILENAME} !-l
+     RewriteRule . /index.html [L]
+   </IfModule>
+   ```
+
+6. **Enable SSL (HTTPS)**:
+   - In cPanel, go to **SSL/TLS Status** or **AutoSSL**
+   - Enable SSL for your domain
+   - Namecheap provides free SSL with hosting
+
+7. **Verify deployment**:
+   - Visit your domain (e.g., `https://yourdomain.com`)
+   - Test navigation to ensure SPA routing works
+
+**Tips for cPanel deployment**:
+- Clear browser cache if you see old content
+- Use cPanel's **Terminal** for command-line access if available
+- Set up a deployment script or use Git integration in cPanel for automated deployments
