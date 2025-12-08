@@ -199,3 +199,41 @@ If you prefer to host on Namecheap's cPanel instead of GitHub Pages:
 - Clear browser cache if you see old content
 - Use cPanel's **Terminal** for command-line access if available
 - Set up a deployment script or use Git integration in cPanel for automated deployments
+
+## Deploy to Existing Domain on Namecheap cPanel
+
+If you already have a domain configured with Namecheap and want to update your site:
+
+1. **Build your project locally**:
+   ```sh
+   npm run build
+   ```
+
+2. **Backup existing site (recommended)**:
+   - In cPanel File Manager, navigate to `public_html`
+   - Select all files → Compress → Download the backup
+
+3. **Remove old files**:
+   - In `public_html`, select all files except:
+     - `.htaccess` (if you want to keep custom rules)
+     - Any files not related to the website (e.g., email configurations)
+   - Delete selected files
+
+4. **Upload new build**:
+   - Upload the contents of your `dist` folder to `public_html`
+   - If uploading as `.zip`, extract it in cPanel after upload
+
+5. **Verify .htaccess is configured**:
+   - Ensure the SPA routing rules (from step 5 above) are present
+   - If you deleted it, recreate the `.htaccess` file
+
+6. **Clear cache and test**:
+   - Clear your browser cache (Ctrl+Shift+R or Cmd+Shift+R)
+   - Test all routes to ensure SPA routing works
+   - Check SSL is still active
+
+**Troubleshooting existing domain deployment**:
+- If you see a 500 error, check `.htaccess` syntax
+- If routes don't work, verify `.htaccess` is in `public_html` root
+- If old content appears, clear browser cache and cPanel cache (if enabled)
+- Check cPanel's **Error Log** for debugging issues
