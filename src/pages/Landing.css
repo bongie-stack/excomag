@@ -1,0 +1,191 @@
+.landing-page {
+    padding-top: 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.hero-section {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    color: white;
+}
+
+.hero-slideshow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 1.5s ease-in-out, transform 6s linear;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 20, 40, 0.4), rgba(0, 10, 30, 0.6));
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1280px;
+    padding: 0 2rem;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    font-weight: 800;
+}
+
+.hero-content .text-gradient {
+    background-image: linear-gradient(to right, #38bdf8, #bae6fd);
+    text-shadow: none;
+    /* Text shadow doesn't work well with background-clip: text typically, but we should clear it just in case */
+}
+
+/* Adjust text gradient to pop on dark background if needed, or just keep white title 
+   But the span has .text-gradient. We assume global css or other file handles .text-gradient. 
+   If it's transparent text with bg clip, it should be bright. */
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 700px;
+    margin: 0 auto;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.6;
+}
+
+.split-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding-bottom: 4rem;
+    flex: 1;
+}
+
+.selection-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: var(--shadow-xl);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    background: white;
+}
+
+.selection-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.card-content {
+    z-index: 2;
+    padding: 2rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-icon {
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.card-content h2 {
+    font-size: 2.5rem;
+    margin: 1rem 0;
+}
+
+.card-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 80%;
+}
+
+.card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: transform 0.5s ease;
+}
+
+.selection-card:hover .card-bg {
+    transform: scale(1.05);
+}
+
+.primary-bg {
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.95), rgba(2, 132, 199, 0.8));
+}
+
+.high-bg {
+    background: linear-gradient(135deg, rgba(127, 29, 29, 0.95), rgba(127, 29, 29, 0.8));
+}
+
+.card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: var(--color-brand-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.card-link:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .split-selection {
+        grid-template-columns: 1fr;
+    }
+}

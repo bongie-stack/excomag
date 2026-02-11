@@ -1,0 +1,110 @@
+.activities-page {
+    background-color: var(--color-bg-body);
+}
+
+.activities-hero {
+    background: linear-gradient(rgba(0, 33, 71, 0.85), rgba(0, 33, 71, 0.95)), url('../assets/hero_4.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0 4rem;
+    color: white;
+    text-align: center;
+}
+
+.activities-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+}
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.activity-card {
+    background: var(--color-primary-light);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    text-align: center;
+    border: 1px solid rgba(0, 33, 71, 0.1);
+}
+
+.activity-card.white-bg {
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.activity-card h3 {
+    color: var(--color-brand-primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.activity-card p {
+    color: var(--color-text-main);
+}
+
+.uniform-showcase {
+    display: flex;
+    padding: 4rem;
+    gap: 4rem;
+    align-items: center;
+}
+
+.uniform-text {
+    flex: 1;
+}
+
+.uniform-text h2 {
+    color: var(--color-brand-primary);
+    margin-bottom: 1rem;
+}
+
+.uniform-list {
+    margin-top: 1.5rem;
+    list-style: none;
+    padding: 0;
+}
+
+.uniform-list li {
+    padding: 0.5rem 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.uniform-list li::before {
+    content: "•";
+    color: var(--color-brand-secondary);
+    font-weight: bold;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+}
+
+.uniform-image-placeholder {
+    flex: 0 0 300px;
+    height: 400px;
+    background: var(--color-brand-primary);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+@media (max-width: 992px) {
+    .uniform-showcase {
+        flex-direction: column;
+        padding: 2rem;
+    }
+
+    .uniform-image-placeholder {
+        width: 100%;
+        height: 250px;
+        flex: none;
+    }
+}

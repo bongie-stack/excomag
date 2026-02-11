@@ -1,0 +1,111 @@
+.our-staff-page {
+    background-color: var(--color-bg-light);
+}
+
+.staff-hero {
+    background: linear-gradient(rgba(0, 33, 71, 0.9), rgba(0, 33, 71, 0.95)), url('../assets/hero_2.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0 4rem;
+    color: white;
+    text-align: center;
+}
+
+.staff-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: -2rem;
+}
+
+.staff-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.staff-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.staff-image-container {
+    height: 250px;
+    background-color: var(--color-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.staff-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.staff-placeholder {
+    color: var(--color-brand-primary);
+    opacity: 1;
+}
+
+.staff-info {
+    padding: 2rem;
+    text-align: center;
+}
+
+.staff-name {
+    font-size: 1.5rem;
+    color: var(--color-brand-primary);
+    margin-bottom: 0.25rem;
+}
+
+.staff-role {
+    font-size: 1rem;
+    color: var(--color-brand-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.staff-divider {
+    width: 40px;
+    height: 3px;
+    background: var(--color-primary-light);
+    margin: 0 auto 1.5rem;
+}
+
+.staff-description {
+    color: var(--color-text-main);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.philosophy-text {
+    max-width: 800px;
+    margin: 2rem auto 0;
+    font-size: 1.2rem;
+    color: var(--color-text-main);
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .staff-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .staff-grid {
+        grid-template-columns: 1fr;
+    }
+}

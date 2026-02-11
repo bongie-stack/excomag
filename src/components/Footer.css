@@ -1,0 +1,112 @@
+.footer {
+    background: var(--color-brand-primary);
+    color: white;
+    padding: 5rem 0 0;
+    margin-top: auto;
+    font-size: 1rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 4rem;
+    padding-bottom: 4rem;
+}
+
+.footer-logo {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-serif);
+}
+
+.footer-desc {
+    opacity: 0.8;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 400px;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background: var(--color-brand-secondary);
+    color: var(--color-brand-primary);
+    transform: translateY(-3px);
+}
+
+.footer-section h4 {
+    color: var(--color-brand-secondary) !important;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.footer-col h4 {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    color: white;
+    font-weight: 600;
+}
+
+.contact-list,
+.footer-links {
+    list-style: none;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.contact-icon {
+    color: var(--color-brand-secondary);
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.footer-links li {
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--color-brand-secondary);
+    opacity: 1;
+    padding-left: 5px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
